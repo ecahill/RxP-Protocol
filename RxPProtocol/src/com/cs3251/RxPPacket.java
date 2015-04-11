@@ -1,15 +1,46 @@
 package com.cs3251;
 
-public class RxPPacket {
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
-	private int packetSize;//512 bytes
-	private int seqNumber;
-	private int ackNumber;
-	private short destPort;
-	private short sourcePort;
-	private int checksum;
-	private int connectionCode;
+public class RxPPacket {
+	private RxPPacketHeader packetHeader;
 	private byte[] data;
 	
+	public RxPPacket(){
+		packetHeader = new RxPPacketHeader();
+	};
+	
+	public RxPPacket(int packetSize, int dataSize, int seqNumber, int ackNumber, String sourceIP, String destIP, short destPort, short sourcePort, int connectionCode){
+		packetHeader = new RxPPacketHeader(packetSize, dataSize, seqNumber, ackNumber, sourceIP, destIP, destPort, sourcePort, connectionCode);
+	}
+	
+	public RxPPacketHeader getPacketHeader(){
+		return packetHeader;
+	}
+	
+	public void setRxPPacketHeader(byte[] data){
+		packetHeader.byteToHeader(data);
+	}
+	
+	public void setRxPPacketHeader(RxPPacketHeader header){
+		packetHeader = header;
+	}
 
+	
+	public String toString(){
+		String strToRet = "";
+		strToRet += "Packet Size: " + packetHeader.getPacketSize() + "\n";
+		strToRet += "Data Size: " + packetHeader.getDataSize() + "\n";
+		strToRet += "Sequence Number: " + packetHeader.getSeqNumber() + "\n";
+		strToRet += "Ack Number: " + packetHeader.getAckNumber() + "\n";
+		strToRet += "Connection Code: " + packetHeader.getConnectionCode() + "\n";
+		strToRet += "Source IP: " + packetHeader.getSourceIP()+ ":" + packetHeader.getSourcePort() + "\n";
+		strToRet += "Dest IP: " + packetHeader.getDestIP() + ":" + packetHeader.getDestPort() + "\n";
+		
+		return strToRet;
+	}
+	
+	
 }
