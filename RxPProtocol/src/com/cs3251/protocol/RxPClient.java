@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
+
 import com.cs3251.RxPPacket;
+import com.cs3251.RxPPacketHeader;
 
 public class RxPClient {
 	private DatagramSocket clientSocket;
@@ -47,18 +50,33 @@ public class RxPClient {
 		return connectionState;
 	}
 	
-	public int sendData(byte[] data) throws IOException{
+	public int sendData(byte[] data) throws IOException, ClassNotFoundException{
 		if(connectionState != 201) return -1;
 		
 		//setup connection for sending data
 		packetSent = packetFactory.createPutRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length);
 		sendPacket(packetSent);
-		
-		
+		packetRecv = recvPacket(packetSent);
+		if(packetRecv.getPacketHeader().getConnectionCode() != 501) return -1;		
 		
 		int dataPosition = 0;
+		RxPPacketHeader sendDataHeader = new RxPPacketHeader();
+		sendDataHeader.setSourceIP(sourceIP);
+		sendDataHeader.setDestIP(destIP);
+		sendDataHeader.setSourcePort(sourcePort);
+		sendDataHeader.setDestPort(destPort);
+		sendDataHeader.setSeqNumber(dataPosition);
+		sendDataHeader.setAckNumber(0);
+		sendDataHeader.setChecksum(0);
+		sendDataHeader.setDataSize(data.length);
+		sendDataHeader.setPacketSize( (512 - sendDataHeader.getHeaderSize()) >= data.length ? data.length : 512 - sendDataHeader.getHeaderSize());
+		packetSent.setRxPPacketHeader(sendDataHeader);		
 		while(dataPosition < data.length){
-			
+			packetSent.setData(Arrays.copyOfRange(data, dataPosition, packetSent.getPacketHeader().getPacketSize()));
+			sendPacket(packetSent);
+			dataPosition += packetSent.getPacketHeader().getPacketSize();
+			sendDataHeader.setPacketSize( (512 - sendDataHeader.getHeaderSize()) >= (data.length - dataPosition) ? (data.length - dataPosition) : 512 - sendDataHeader.getHeaderSize());
+			packetSent.setRxPPacketHeader(sendDataHeader);
 		}
 		return 0;
 	}
@@ -67,6 +85,9 @@ public class RxPClient {
 		byte[] bytesToSend = new byte[512];
 		byte[] packetHeader = packetToSend.getPacketHeader().headerToByte();
 		System.arraycopy(packetHeader, 0, bytesToSend, 0, packetHeader.length);
+		if(packetToSend.getPacketHeader().getPacketSize() != 0){
+			System.arraycopy(packetToSend.getData(), 0, bytesToSend, packetHeader.length, packetToSend.getPacketHeader().getPacketSize());
+		}
 		sendPacket = new DatagramPacket(bytesToSend, bytesToSend.length, InetAddress.getByName(packetToSend.getPacketHeader().getDestIP()), packetToSend.getPacketHeader().getDestPort());
 		clientSocket.send(sendPacket);
 	}

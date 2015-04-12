@@ -23,6 +23,14 @@ public class RxPPacket {
 	public void setRxPPacketHeader(RxPPacketHeader header){
 		packetHeader = header;
 	}
+	
+	public void setData(byte[] data){
+		this.data = data;
+	}
+	
+	public byte[] getData(){
+		return data;
+	}
 
 	
 	public String toString(){

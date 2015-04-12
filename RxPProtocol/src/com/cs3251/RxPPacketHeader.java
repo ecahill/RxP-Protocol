@@ -121,7 +121,7 @@ public class RxPPacketHeader {
 	}
 	
 	public int getHeaderSize(){
-		return (7*4) + sourceIP.length() + destIP.length();
+		return (7*4) + sourceIP.length() + destIP.length() + 8;
 	}
 	
 	public byte[] headerToByte(){

@@ -1,9 +1,11 @@
 package com.cs3251.protocol;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
 
 import com.cs3251.RxPPacket;
 
@@ -55,8 +57,10 @@ public class RxPServer {
 		if(connectionState != 201) return -1;
 		while(connectionState != 808/*whatever code is close connection*/){
 			packetRecv = recvPacket(packetSent);
-			if(packetRecv.getPacketHeader().getConnectionCode() == 501)
-				clientSendRequestHandler();
+			if(packetRecv.getPacketHeader().getConnectionCode() == 500){
+				byte[] string = clientSendRequestHandler();
+				System.out.println(new String(string));
+			}
 			//recv packet and check the connection code for the reqest
 			//based on the request, make functions for this
 			
@@ -72,10 +76,11 @@ public class RxPServer {
 		int dataPosition = 0;
 		while(dataPosition < packetSent.getPacketHeader().getDataSize()){
 			packetRecv = recvPacket(packetSent);
-			
+			System.arraycopy(packetRecv.getData(), 0, data, dataPosition, packetRecv.getPacketHeader().getPacketSize());
+			dataPosition += packetRecv.getPacketHeader().getPacketSize();
 		}
 		
-		return null;
+		return data;
 		
 		
 	}
@@ -96,6 +101,9 @@ public class RxPServer {
 		newRecvdPacket = new RxPPacket();
 		newRecvdPacket.setRxPPacketHeader(recv);
 		//add data here if any? or perhaps somewhere else?
+		if(newRecvdPacket.getPacketHeader().getDataSize() != 0 && newRecvdPacket.getPacketHeader().getPacketSize() != 0) {
+			newRecvdPacket.setData(Arrays.copyOfRange(recv, newRecvdPacket.getPacketHeader().getHeaderSize(), newRecvdPacket.getPacketHeader().getHeaderSize() + newRecvdPacket.getPacketHeader().getPacketSize()));
+		}
 		return newRecvdPacket;
 	}
 	
