@@ -43,7 +43,24 @@ public class RxPClient {
 		System.out.println(packetSent.toString());
 		packetRecv = recvPacket(packetSent);
 		System.out.println(packetRecv.toString());
+		connectionState = packetRecv.getPacketHeader().getConnectionCode();
 		return connectionState;
+	}
+	
+	public int sendData(byte[] data) throws IOException{
+		if(connectionState != 201) return -1;
+		
+		//setup connection for sending data
+		packetSent = packetFactory.createPutRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length);
+		sendPacket(packetSent);
+		
+		
+		
+		int dataPosition = 0;
+		while(dataPosition < data.length){
+			
+		}
+		return 0;
 	}
 	
 	private void sendPacket(RxPPacket packetToSend) throws IOException{

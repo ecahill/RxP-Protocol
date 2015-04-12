@@ -19,6 +19,12 @@ public class RxPClientPacketFactory {
 		return packet;
 	}
 	
+	public RxPPacket createPutRequestPacket(String sourceIP, String destIP, short destPort, short sourcePort, int dataSize){
+		packet = new RxPPacket(0, dataSize, Math.abs(rand.nextInt()), 0, sourceIP, destIP, destPort, sourcePort, 500);
+		return packet;
+		
+	}
+	
 	public RxPPacket createGetRequestPacket(){
 		return null;
 	};
@@ -31,6 +37,29 @@ public class RxPClientPacketFactory {
 				packetHeader.setDataSize(0);
 				packetHeader.setPacketSize(0);
 				packetHeader.setConnectionCode(200);
+				packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
+				packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
+				packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
+				packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
+				packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
+				break;
+			case 501:
+				packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
+				packetHeader.setPacketSize(0);
+				packetHeader.setConnectionCode(502);
+				packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
+				packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
+				packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
+				packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
+				packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
+				break;
+				
+			case 503:
+				packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
+				packetHeader.setPacketSize(0);
+				packetHeader.setConnectionCode(505);
 				packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
 				packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
 				packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());

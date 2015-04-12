@@ -1,9 +1,5 @@
 package com.cs3251;
 
-import java.net.InetAddress;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 public class RxPPacket {
 	private RxPPacketHeader packetHeader;
 	private byte[] data;

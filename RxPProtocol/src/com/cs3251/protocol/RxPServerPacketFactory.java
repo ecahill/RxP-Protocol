@@ -45,6 +45,45 @@ public class RxPServerPacketFactory {
 			packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
 			packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
 			break;
+			
+		case 500:
+			packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
+			packetHeader.setPacketSize(0);
+			packetHeader.setConnectionCode(501);
+			packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
+			packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+			packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
+			packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
+			packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
+			packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
+			break;
+			
+		case 502:
+			packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
+			packetHeader.setPacketSize(0);
+			packetHeader.setConnectionCode(503);
+			packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
+			packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+			packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
+			packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
+			packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
+			packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
+			break;
+			
+		case 505:
+			packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
+			packetHeader.setPacketSize(0);
+			packetHeader.setConnectionCode(506);
+			packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
+			packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+			packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
+			packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
+			packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
+			packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
+			break;
+			
+		default:
+			break;
 		
 		}
 		packet.setRxPPacketHeader(packetHeader);
