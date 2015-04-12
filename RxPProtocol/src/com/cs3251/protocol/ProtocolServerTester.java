@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class ProtocolServerTester {
 	private static short serverPort;
-	private static short clientPort;
+	private static short netEmuPort;
 	private static InetAddress ipAddress;
 
 	public static void main(String args[]) throws ClassNotFoundException, IOException{
@@ -24,7 +24,7 @@ public class ProtocolServerTester {
 				System.out.println("Server port number must be odd. Exiting.");
 				System.exit(1);
 			}
-			clientPort = Short.parseShort(args[3]);
+			netEmuPort = Short.parseShort(args[3]);
 		}
 		catch (NumberFormatException ex){
 			System.out.println("The port number was invalid. Exiting.");
@@ -38,7 +38,7 @@ public class ProtocolServerTester {
 			System.exit(0);
 		}
 		
-		RxPServer server = new RxPServer("localhost", "localhost", serverPort, clientPort);
+		RxPServer server = new RxPServer("localhost", "localhost", serverPort, netEmuPort);
 		
 		server.startRxPServer();
 		
