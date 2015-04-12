@@ -69,6 +69,32 @@ public class RxPServer implements RxPServerInterface {
 		}
 		s.startServer();	
 		Scanner scan = new Scanner(System.in);
+		while(true){
+			String nextLine = scan.nextLine();
+			if (nextLine.length()>=8){
+				String[] input = nextLine.split(" ");
+				if (input[0].equals("window")){
+					try{
+						int size = Integer.parseInt(input[1]);
+						s.setWindow(size);
+					}
+					catch(NumberFormatException ex){
+						System.out.println("Invalid window size.");
+					}
+				}
+				else{
+					System.out.println("Invalid command.");
+				}
+			}
+			if(nextLine.length()==9){
+				if (nextLine.equals("terminate")){
+					s.terminateServer();
+				}
+			}
+			else{
+				System.out.println("Invalid command.");
+			}
+		}
 	}
 	
 }

@@ -63,7 +63,20 @@ public class RxPClient implements RxPClientInterface {
 			System.exit(0);
 		}
 		
-		
+		c.startClientServer();
 		Scanner scan = new Scanner(System.in);
+		
+		while(true){
+			String nextLine = scan.nextLine();
+			if (nextLine.length()<=10){
+				
+				
+				
+				
+			}
+			else{
+				System.out.println("Invalid input.");
+			}
+		}
 	}
 }
