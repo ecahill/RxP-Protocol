@@ -47,7 +47,37 @@ public class RxPServer {
 		packetSent = packetFactory.createNextPacket(packetRecv);
 		System.out.println(packetSent.toString());
 		sendPacket(packetSent);
+		connectionState = packetSent.getPacketHeader().getConnectionCode();
 		return connectionState;
+	}	
+	
+	public int runServer() throws ClassNotFoundException, IOException{
+		if(connectionState != 201) return -1;
+		while(connectionState != 808/*whatever code is close connection*/){
+			packetRecv = recvPacket(packetSent);
+			if(packetRecv.getPacketHeader().getConnectionCode() == 501)
+				clientSendRequestHandler();
+			//recv packet and check the connection code for the reqest
+			//based on the request, make functions for this
+			
+			
+		}
+		return 0;
+	}
+	
+	private byte[] clientSendRequestHandler() throws IOException, ClassNotFoundException{
+		packetSent = packetFactory.createNextPacket(packetRecv);
+		sendPacket(packetSent);
+		byte[] data = new byte[packetSent.getPacketHeader().getDataSize()];
+		int dataPosition = 0;
+		while(dataPosition < packetSent.getPacketHeader().getDataSize()){
+			packetRecv = recvPacket(packetSent);
+			
+		}
+		
+		return null;
+		
+		
 	}
 	
 	private void sendPacket(RxPPacket packetToSend) throws IOException{
