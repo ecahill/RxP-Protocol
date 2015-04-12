@@ -18,6 +18,7 @@ public class RxPServer {
 	private short destPort;
 	private int connectionState;
 	private RxPServerPacketFactory packetFactory;
+	private int windowSize;
 	
 	private RxPPacket packetSent;
 	private RxPPacket packetRecv;
@@ -66,6 +67,10 @@ public class RxPServer {
 		newRecvdPacket.setRxPPacketHeader(recv);
 		//add data here if any? or perhaps somewhere else?
 		return newRecvdPacket;
+	}
+	
+	public void setWindow(int size){
+		this.windowSize = size;
 	}
 	
 	public void close(){
