@@ -57,10 +57,13 @@ public class ProtocolClientTester {
 			}		
 			else if (input.length==2){
 				if (input[0].equals("get")){
+					System.out.println("<debug> Reading GET input.");
 					String filename = input[1];
+					System.out.println("<debug> Looking for file: "+filename);
 					String request = "GET*"+filename;
 					byte[] ret = client.getData(request.getBytes());
 					if (ret.length!=0){
+						System.out.println("<debug> Writing file.");
 						FileOutputStream fos = new FileOutputStream("filename");
 						fos.write(ret);
 						fos.close();

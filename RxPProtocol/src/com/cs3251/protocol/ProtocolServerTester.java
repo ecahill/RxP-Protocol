@@ -64,8 +64,9 @@ public class ProtocolServerTester {
 			else{
 				System.out.println("Invalid command.");
 			}
-			if (server.runServer()!= null){
-				byte[] request = server.runServer();
+			byte[] request = server.runServer();
+			if (request!= null){
+				System.out.println("<debug> Receiving request from client.");
 				String val = request.toString();
 				if (val.indexOf("GET*")!=-1){
 					String fRqst = val.substring(4);
