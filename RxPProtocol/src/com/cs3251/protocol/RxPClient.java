@@ -18,6 +18,7 @@ public class RxPClient {
 	private short destPort;
 	private int connectionState;
 	private RxPClientPacketFactory packetFactory;
+	private int windowSize;
 
 	private RxPPacket packetSent;
 	private RxPPacket packetRecv;
@@ -28,6 +29,7 @@ public class RxPClient {
 		this.destIP = destIP;
 		this.destPort = destPort;
 		this.connectionState = 0;
+		windowSize = 1;
 		packetFactory = new RxPClientPacketFactory();
 	}
 	

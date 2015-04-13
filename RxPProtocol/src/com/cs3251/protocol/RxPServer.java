@@ -30,6 +30,7 @@ public class RxPServer {
 		this.destIP = destIP;
 		this.destPort = destPort;
 		this.connectionState = 0;
+		windowSize = 1;
 		packetFactory = new RxPServerPacketFactory();
 	}
 	
