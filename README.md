@@ -11,8 +11,8 @@
 <li>RxPClient.java</li>
 <li>RxPServerPacketFactory.java</li>
 <li>RxPClientPacketFactory.java</li>
-<li>   </li>
-<li>   </li>
+<li>RxPPacket.java</li>
+<li>RxPPacketHeader.java</li>
 </ul>
 </p>
 
