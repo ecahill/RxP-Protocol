@@ -126,12 +126,12 @@ public class RxPPacketHeader {
 	
 	public byte[] headerToByte(){
 		byte[] bytePacket = new byte[36 + sourceIP.length() + destIP.length()];
-		System.arraycopy(ByteBuffer.allocate(4).putInt(packetSize).array(), 0, bytePacket, 0, 4);
-		System.arraycopy(ByteBuffer.allocate(4).putInt(dataSize).array(), 0, bytePacket, 4, 4);
-		System.arraycopy(ByteBuffer.allocate(4).putInt(seqNumber).array(), 0, bytePacket, 8, 4);
-		System.arraycopy(ByteBuffer.allocate(4).putInt(ackNumber).array(), 0, bytePacket, 12, 4);
-		System.arraycopy(ByteBuffer.allocate(4).putInt(connectionCode).array(), 0, bytePacket, 16, 4);
-		System.arraycopy(ByteBuffer.allocate(4).putInt(checksum).array(), 0, bytePacket, 20, 4);
+		System.arraycopy(ByteBuffer.allocate(4).putInt(checksum).array(), 0, bytePacket, 0, 4);
+		System.arraycopy(ByteBuffer.allocate(4).putInt(packetSize).array(), 0, bytePacket, 4, 4);
+		System.arraycopy(ByteBuffer.allocate(4).putInt(dataSize).array(), 0, bytePacket, 8, 4);
+		System.arraycopy(ByteBuffer.allocate(4).putInt(seqNumber).array(), 0, bytePacket, 12, 4);
+		System.arraycopy(ByteBuffer.allocate(4).putInt(ackNumber).array(), 0, bytePacket, 16, 4);
+		System.arraycopy(ByteBuffer.allocate(4).putInt(connectionCode).array(), 0, bytePacket, 20, 4);
 		System.arraycopy(ByteBuffer.allocate(2).putShort(destPort).array(), 0, bytePacket, 24, 2);
 		System.arraycopy(ByteBuffer.allocate(2).putShort(sourcePort).array(), 0, bytePacket, 26, 2);
 		System.arraycopy(ByteBuffer.allocate(4).putInt(sourceIP.length()).array(), 0, bytePacket, 28, 4);
@@ -142,12 +142,12 @@ public class RxPPacketHeader {
 	}
 	
 	public void byteToHeader(byte[] packet){
-		packetSize = (packet[0]<<24)&0xff000000|(packet[1]<<16)&0x00ff0000|(packet[2]<< 8)&0x0000ff00|(packet[3]<< 0)&0x000000ff;
-		dataSize = (packet[4]<<24)&0xff000000|(packet[5]<<16)&0x00ff0000|(packet[6]<< 8)&0x0000ff00|(packet[7]<< 0)&0x000000ff;
-		seqNumber = (packet[8]<<24)&0xff000000|(packet[9]<<16)&0x00ff0000|(packet[10]<< 8)&0x0000ff00|(packet[11]<< 0)&0x000000ff;
-		ackNumber = (packet[12]<<24)&0xff000000|(packet[13]<<16)&0x00ff0000|(packet[14]<< 8)&0x0000ff00|(packet[15]<< 0)&0x000000ff;
-		connectionCode = (packet[16]<<24)&0xff000000|(packet[17]<<16)&0x00ff0000|(packet[18]<< 8)&0x0000ff00|(packet[19]<< 0)&0x000000ff;
-		checksum = (packet[20]<<24)&0xff000000|(packet[21]<<16)&0x00ff0000|(packet[22]<< 8)&0x0000ff00|(packet[23]<< 0)&0x000000ff;
+		checksum = (packet[0]<<24)&0xff000000|(packet[1]<<16)&0x00ff0000|(packet[2]<< 8)&0x0000ff00|(packet[3]<< 0)&0x000000ff;
+		packetSize = (packet[4]<<24)&0xff000000|(packet[5]<<16)&0x00ff0000|(packet[6]<< 8)&0x0000ff00|(packet[7]<< 0)&0x000000ff;
+		dataSize = (packet[8]<<24)&0xff000000|(packet[9]<<16)&0x00ff0000|(packet[10]<< 8)&0x0000ff00|(packet[11]<< 0)&0x000000ff;
+		seqNumber = (packet[12]<<24)&0xff000000|(packet[13]<<16)&0x00ff0000|(packet[14]<< 8)&0x0000ff00|(packet[15]<< 0)&0x000000ff;
+		ackNumber = (packet[16]<<24)&0xff000000|(packet[17]<<16)&0x00ff0000|(packet[18]<< 8)&0x0000ff00|(packet[19]<< 0)&0x000000ff;
+		connectionCode = (packet[20]<<24)&0xff000000|(packet[21]<<16)&0x00ff0000|(packet[22]<< 8)&0x0000ff00|(packet[23]<< 0)&0x000000ff;
 		destPort = (short) ((packet[24]<< 8)&0xff00|(packet[25]<< 0)&0x00ff);
 		sourcePort = (short) ((packet[26]<< 8)&0xff00|(packet[27]<< 0)&0x00ff);
 		int sourceIPLength = (packet[28]<<24)&0xff000000|(packet[29]<<16)&0x00ff0000|(packet[30]<< 8)&0x0000ff00|(packet[31]<< 0)&0x000000ff;

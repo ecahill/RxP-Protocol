@@ -31,6 +31,10 @@ public class RxPPacket {
 	public byte[] getData(){
 		return data;
 	}
+	
+	public void setChecksum(int checksum){
+		packetHeader.setChecksum(checksum);
+	}
 
 	
 	public String toString(){

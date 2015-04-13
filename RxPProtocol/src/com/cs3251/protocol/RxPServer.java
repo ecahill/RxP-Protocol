@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Arrays;
+import java.util.zip.CRC32;
 
 import com.cs3251.RxPPacket;
 
@@ -19,6 +20,7 @@ public class RxPServer {
 	private short destPort;
 	private int connectionState;
 	private RxPServerPacketFactory packetFactory;
+	private CRC32 crc;
 	private int windowSize;
 	
 	private RxPPacket packetSent;
@@ -30,6 +32,7 @@ public class RxPServer {
 		this.destIP = destIP;
 		this.destPort = destPort;
 		this.connectionState = 0;
+		crc = new CRC32();
 		windowSize = 1;
 		packetFactory = new RxPServerPacketFactory();
 	}
@@ -116,6 +119,13 @@ public class RxPServer {
 		if(packetToSend.getPacketHeader().getPacketSize() != 0){
 			System.arraycopy(packetToSend.getData(), 0, bytesToSend, packetHeader.length, packetToSend.getPacketHeader().getPacketSize());
 		}
+		crc.update(Arrays.copyOfRange(bytesToSend, 4, packetHeader.length + packetToSend.getPacketHeader().getPacketSize() - 4));
+		int checksum = (int)crc.getValue();
+		System.out.println(checksum);
+		bytesToSend[0] = (byte) ((checksum >> 24) & 0xff);
+		bytesToSend[1] = (byte) ((checksum >> 16) & 0xff);
+		bytesToSend[2] = (byte) ((checksum >> 8) & 0xff);
+		bytesToSend[3] = (byte) (checksum & 0xff);
 		sendPacket = new DatagramPacket(bytesToSend, bytesToSend.length, InetAddress.getByName(packetToSend.getPacketHeader().getDestIP()), packetToSend.getPacketHeader().getDestPort());
 		serverSocket.send(sendPacket);
 	}
@@ -131,6 +141,11 @@ public class RxPServer {
 		if(newRecvdPacket.getPacketHeader().getDataSize() != 0 && newRecvdPacket.getPacketHeader().getPacketSize() != 0) {
 			newRecvdPacket.setData(Arrays.copyOfRange(recv, newRecvdPacket.getPacketHeader().getHeaderSize(), newRecvdPacket.getPacketHeader().getHeaderSize() + newRecvdPacket.getPacketHeader().getPacketSize()));
 		}
+		crc.update(Arrays.copyOfRange(recv, 4, newRecvdPacket.getPacketHeader().getHeaderSize() + newRecvdPacket.getPacketHeader().getPacketSize() - 4));
+		int checksum = (int)crc.getValue();
+		System.out.println(checksum);
+		if(checksum == newRecvdPacket.getPacketHeader().getChecksum())
+			System.out.println("match!");
 		return newRecvdPacket;
 	}
 	
