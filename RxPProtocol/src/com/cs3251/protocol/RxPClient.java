@@ -89,7 +89,7 @@ public class RxPClient {
 			packetRecv = recvPacket(packetSent);
 			System.arraycopy(packetRecv.getData(), 0, data, dataPosition, packetRecv.getPacketHeader().getPacketSize());
 			dataPosition += packetRecv.getPacketHeader().getPacketSize();
-			packetSent = packetFactory.createClientRequestPacket(sourceIP, destIP, destPort, sourcePort, packetRecv.getPacketHeader().getDataSize(), dataPosition + 1);
+			packetSent = packetFactory.createClientRequestPacket(sourceIP, destIP, destPort, sourcePort, packetRecv.getPacketHeader().getDataSize(), dataPosition);
 			sendPacket(packetSent);	
 		}
 		
