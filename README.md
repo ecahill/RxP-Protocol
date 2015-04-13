@@ -8,11 +8,17 @@
 <p><b>Files Submitted</b>:
 <ul>
 <li>RxPServer.java</li>
+- This class represents the server functionality of the RxP Protocol
 <li>RxPClient.java</li>
+- This class represents the client functionality of the RxP Protocol
 <li>RxPServerPacketFactory.java</li>
+- This class is used to create new packets or next packets that depend on the connection code of the packet
 <li>RxPClientPacketFactory.java</li>
+- This class is used to create new packets, request packets, or next packets that depend on the connection code of the packet. 
 <li>RxPPacket.java</li>
+- The class represents a packet with a packet header and data
 <li>RxPPacketHeader.java</li>
+- This class contains all header information of each RxPPacket
 </ul>
 </p>
 
