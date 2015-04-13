@@ -59,32 +59,43 @@ public class RxPClient {
 		if(packetRecv.getPacketHeader().getConnectionCode() != 501) return -1;		
 		
 		int dataPosition = 0;
-		RxPPacketHeader sendDataHeader = new RxPPacketHeader();
-		sendDataHeader.setSourceIP(sourceIP);
-		sendDataHeader.setDestIP(destIP);
-		sendDataHeader.setSourcePort(sourcePort);
-		sendDataHeader.setDestPort(destPort);
-		sendDataHeader.setSeqNumber(dataPosition);
-		sendDataHeader.setAckNumber(0);
-		sendDataHeader.setChecksum(0);
-		sendDataHeader.setDataSize(data.length);
-		sendDataHeader.setPacketSize( (512 - sendDataHeader.getHeaderSize()) >= data.length ? data.length : 512 - sendDataHeader.getHeaderSize());
-		packetSent.setRxPPacketHeader(sendDataHeader);		
+		packetSent = packetFactory.createSendRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length, 0, (512 - packetSent.getPacketHeader().getHeaderSize()) >= data.length ? data.length : 512 - packetSent.getPacketHeader().getHeaderSize());
+				
 		while(dataPosition < data.length){
 			packetSent.setData(Arrays.copyOfRange(data, dataPosition, packetSent.getPacketHeader().getPacketSize()));
 			sendPacket(packetSent);
 			
-			//recv here
-			//check ack and send those packets
-			
 			packetRecv = recvPacket(packetSent);
 			
-			
-			dataPosition += packetSent.getPacketHeader().getPacketSize();
-			sendDataHeader.setPacketSize( (512 - sendDataHeader.getHeaderSize()) >= (data.length - dataPosition) ? (data.length - dataPosition) : 512 - sendDataHeader.getHeaderSize());
-			packetSent.setRxPPacketHeader(sendDataHeader);
+			packetSent = packetFactory.createSendRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length, packetRecv.getPacketHeader().getAckNumber(), (512 - packetSent.getPacketHeader().getHeaderSize()) >= data.length ? data.length : 512 - packetSent.getPacketHeader().getHeaderSize());
+			dataPosition += packetRecv.getPacketHeader().getAckNumber();
 		}
 		return 0;
+	}
+	
+	public byte[] getData(byte[] data) throws ClassNotFoundException, IOException{
+		sendData(data);
+		packetRecv = recvPacket(packetSent);
+		
+		return serverSendRequestHandler();
+		
+	}
+	
+	private byte[] serverSendRequestHandler() throws IOException, ClassNotFoundException{
+		packetSent = packetFactory.createNextPacket(packetRecv);
+		sendPacket(packetSent);
+		byte[] data = new byte[packetSent.getPacketHeader().getDataSize()];
+		
+		int dataPosition = 0;
+		while(dataPosition < packetSent.getPacketHeader().getDataSize()){
+			packetRecv = recvPacket(packetSent);
+			System.arraycopy(packetRecv.getData(), 0, data, dataPosition, packetRecv.getPacketHeader().getPacketSize());
+			dataPosition += packetRecv.getPacketHeader().getPacketSize();
+			packetSent = packetFactory.createClientRequestPacket(sourceIP, destIP, destPort, sourcePort, packetRecv.getPacketHeader().getDataSize(), dataPosition + 1);
+			sendPacket(packetSent);	
+		}
+		
+		return data;
 	}
 	
 	private void sendPacket(RxPPacket packetToSend) throws IOException{
@@ -106,6 +117,9 @@ public class RxPClient {
 		newRecvdPacket = new RxPPacket();
 		newRecvdPacket.setRxPPacketHeader(recv);
 		//add data here if any? or perhaps somewhere else?
+		if(newRecvdPacket.getPacketHeader().getDataSize() != 0 && newRecvdPacket.getPacketHeader().getPacketSize() != 0) {
+			newRecvdPacket.setData(Arrays.copyOfRange(recv, newRecvdPacket.getPacketHeader().getHeaderSize(), newRecvdPacket.getPacketHeader().getHeaderSize() + newRecvdPacket.getPacketHeader().getPacketSize()));
+		}
 		return newRecvdPacket;
 	}
 	

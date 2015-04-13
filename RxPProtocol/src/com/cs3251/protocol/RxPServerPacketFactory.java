@@ -18,6 +18,22 @@ public class RxPServerPacketFactory {
 		return packet;
 	}
 	
+	public RxPPacket createClientRequestPacket(String sourceIP, String destIP, short destPort, short sourcePort, int dataSize, int ackNumber){
+		packet = new RxPPacket(0, dataSize, 0,ackNumber, sourceIP, destIP, destPort, sourcePort, 506);
+		return packet;
+	}
+	
+	public RxPPacket createPutRequestPacket(String sourceIP, String destIP, short destPort, short sourcePort, int dataSize){
+		packet = new RxPPacket(0, dataSize, Math.abs(rand.nextInt()), 0, sourceIP, destIP, destPort, sourcePort, 500);
+		return packet;
+		
+	}
+	
+	public RxPPacket createSendRequestPacket(String sourceIP, String destIP, short destPort, short sourcePort, int dataSize, int seqNumber, int packetSize){
+		packet = new RxPPacket(packetSize, dataSize, seqNumber, 0, sourceIP, destIP, destPort, sourcePort, 506);
+		return packet;
+	}
+	
 	public RxPPacket createNextPacket(RxPPacket packetRecvd){
 		packet = new RxPPacket();
 		packetHeader = new RxPPacketHeader();

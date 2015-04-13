@@ -11,7 +11,7 @@ public class NewClientTester {
 		
 		client.connect();
 		
-		client.sendData("Testing our server".getBytes());
+		System.out.println(new String(client.getData("Give Me Data!".getBytes())));
 		
 		client.close();
 	}
