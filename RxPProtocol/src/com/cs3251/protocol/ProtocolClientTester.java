@@ -63,8 +63,8 @@ public class ProtocolClientTester {
 					String request = "GET*"+filename;
 					byte[] ret = client.getData(request.getBytes());
 					if (ret.length!=0){
-						System.out.println("<debug> Writing file.");
-						FileOutputStream fos = new FileOutputStream("filename");
+						System.out.println("<debug> Writing file: "+filename);
+						FileOutputStream fos = new FileOutputStream(filename);
 						fos.write(ret);
 						fos.close();
 						System.out.println("Successful GET.");
@@ -77,7 +77,7 @@ public class ProtocolClientTester {
 					String filename = input[1];
 					byte[] rqst = client.getData(("POST*"+filename).getBytes());
 					if (rqst.toString().equals("!")){
-						String fRqst = System.getProperty("user.dir")+filename;
+						String fRqst = System.getProperty("user.dir")+"\\"+filename;
 						System.out.println("Searching for filepath: "+fRqst);
 						File f = new File(fRqst);
 						if (f.exists()){

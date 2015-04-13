@@ -1,8 +1,10 @@
 package com.cs3251.protocol;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -36,41 +38,21 @@ public class ProtocolServerTester {
 		RxPServer server = new RxPServer("localhost", ipAddress, serverPort, netEmuPort);
 		
 		server.startRxPServer();
-		Scanner scan = new Scanner(System.in);
+		//Scanner scan = new Scanner(System.in);
+		BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
 		boolean run = true;
+		boolean flag = false;
+		String nextLine = "";
 		while(run){
-			String nextLine = scan.nextLine();
-			if (nextLine.length()>=8){
-				String[] input = nextLine.split(" ");
-				if (input[0].equals("window")){
-					try{
-						int size = Integer.parseInt(input[1]);
-						server.setWindow(size);
-					}
-					catch(NumberFormatException ex){
-						System.out.println("Invalid window size.");
-					}
-				}
-				else{
-					System.out.println("Invalid command.");
-				}
-			}
-			if(nextLine.length()==9){
-				if (nextLine.equals("terminate")){
-					server.close();
-					run = false;
-				}
-			}
-			else{
-				System.out.println("Invalid command.");
-			}
 			byte[] request = server.runServer();
 			if (request!= null){
+				flag = true;
 				System.out.println("<debug> Receiving request from client.");
-				String val = request.toString();
+				String val = new String(request);
+				System.out.println("<debug> The request was: "+val);
 				if (val.indexOf("GET*")!=-1){
 					String fRqst = val.substring(4);
-					fRqst = System.getProperty("user.dir")+fRqst;
+					fRqst = System.getProperty("user.dir")+"\\"+ fRqst;
 					System.out.println("Searching for filepath: "+fRqst);
 					File f = new File(fRqst);
 					if (f.exists()){
@@ -110,6 +92,35 @@ public class ProtocolServerTester {
 				else{
 					System.out.println("Invalid Request.");
 					server.sendData(new byte[0]);
+				}
+				flag = false;
+			}
+			
+			if (scan.ready()){
+				nextLine = scan.readLine();
+				if (nextLine.length()>=8){
+					String[] input = nextLine.split(" ");
+					if (input[0].equals("window")){
+						try{
+							int size = Integer.parseInt(input[1]);
+							server.setWindow(size);
+						}
+						catch(NumberFormatException ex){
+							System.out.println("Invalid window size.");
+						}
+					}
+					else{
+						System.out.println("Invalid command.");
+					}
+				}
+				if(nextLine.length()==9){
+					if (nextLine.equals("terminate")){
+						server.close();
+						run = false;
+					}
+				}
+				else{
+					System.out.println("Invalid command.");
 				}
 			}
 		
