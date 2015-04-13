@@ -52,8 +52,7 @@ public class RxPClient {
 	
 	public int sendData(byte[] data) throws IOException, ClassNotFoundException{
 		if(connectionState != 201) return -1;
-		
-		//setup connection for sending data
+
 		packetSent = packetFactory.createPutRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length);
 		sendPacket(packetSent);
 		packetRecv = recvPacket(packetSent);
@@ -74,6 +73,13 @@ public class RxPClient {
 		while(dataPosition < data.length){
 			packetSent.setData(Arrays.copyOfRange(data, dataPosition, packetSent.getPacketHeader().getPacketSize()));
 			sendPacket(packetSent);
+			
+			//recv here
+			//check ack and send those packets
+			
+			packetRecv = recvPacket(packetSent);
+			
+			
 			dataPosition += packetSent.getPacketHeader().getPacketSize();
 			sendDataHeader.setPacketSize( (512 - sendDataHeader.getHeaderSize()) >= (data.length - dataPosition) ? (data.length - dataPosition) : 512 - sendDataHeader.getHeaderSize());
 			packetSent.setRxPPacketHeader(sendDataHeader);
