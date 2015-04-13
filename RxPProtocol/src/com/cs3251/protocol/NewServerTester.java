@@ -13,8 +13,6 @@ public class NewServerTester {
 		
 		System.out.println(new String(server.runServer()));
 		
-		server.sendData("Is this the data you want?".getBytes());
-		
 		server.close();
 	}
 	

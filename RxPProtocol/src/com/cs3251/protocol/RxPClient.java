@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.util.Arrays;
 
 import com.cs3251.RxPPacket;
-import com.cs3251.RxPPacketHeader;
 
 public class RxPClient {
 	private DatagramSocket clientSocket;
@@ -62,13 +61,12 @@ public class RxPClient {
 		packetSent = packetFactory.createSendRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length, 0, (512 - packetSent.getPacketHeader().getHeaderSize()) >= data.length ? data.length : 512 - packetSent.getPacketHeader().getHeaderSize());
 				
 		while(dataPosition < data.length){
-			packetSent.setData(Arrays.copyOfRange(data, dataPosition, packetSent.getPacketHeader().getPacketSize()));
+			packetSent.setData(Arrays.copyOfRange(data, dataPosition, dataPosition + packetSent.getPacketHeader().getPacketSize()));
 			sendPacket(packetSent);
 			
 			packetRecv = recvPacket(packetSent);
-			
-			packetSent = packetFactory.createSendRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length, packetRecv.getPacketHeader().getAckNumber(), (512 - packetSent.getPacketHeader().getHeaderSize()) >= data.length ? data.length : 512 - packetSent.getPacketHeader().getHeaderSize());
-			dataPosition += packetRecv.getPacketHeader().getAckNumber();
+			dataPosition = packetRecv.getPacketHeader().getAckNumber();
+			packetSent = packetFactory.createSendRequestPacket(sourceIP, destIP, destPort, sourcePort, data.length, packetRecv.getPacketHeader().getAckNumber(), (512 - packetSent.getPacketHeader().getHeaderSize()) >= data.length -  dataPosition ? data.length - dataPosition : 512 - packetSent.getPacketHeader().getHeaderSize());
 		}
 		return 0;
 	}

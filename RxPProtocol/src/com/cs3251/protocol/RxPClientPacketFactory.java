@@ -1,6 +1,5 @@
 package com.cs3251.protocol;
 
-import java.net.InetAddress;
 import java.util.Random;
 
 import com.cs3251.RxPPacket;
