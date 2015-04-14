@@ -43,7 +43,7 @@ public class RxPClient {
 		sendPacket(packetSent);
 		packetRecv = recvPacket(packetSent);
 		if(packetRecv.getPacketHeader().getAckNumber() != (packetSent.getPacketHeader().getSeqNumber() + 1)) return -1;
-		packetSent = packetFactory.createNextPacket(packetRecv);
+		packetSent = packetFactory.createNextPacket(packetRecv, sourceIP, sourcePort);
 		sendPacket(packetSent);
 		packetRecv = recvPacket(packetSent);
 		connectionState = packetRecv.getPacketHeader().getConnectionCode();
@@ -81,7 +81,7 @@ public class RxPClient {
 	}
 	
 	private byte[] serverSendRequestHandler() throws IOException, ClassNotFoundException{
-		packetSent = packetFactory.createNextPacket(packetRecv);
+		packetSent = packetFactory.createNextPacket(packetRecv, sourceIP, sourcePort);
 		sendPacket(packetSent);
 		byte[] data = new byte[packetSent.getPacketHeader().getDataSize()];
 		
