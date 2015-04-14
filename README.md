@@ -37,7 +37,36 @@ Open up a terminal and run the NetEmu. Open up another terminal and navigate to 
 </p>
 
 <p><b>Updated Protocol: </b>
- 
+<b> RxPClient(String sourceIP, String destIP, short sourceDest, short destPort)</b>
+This constructor is call by a host to create a client RxP instance. The method tries to initializes and returns the RxPClient object.
+
+<b>RxPClient.connect()</b>
+This method is called by the RxP client instance to try and connect to the RxP server instance at destIP:destPort.
+
+<b>int RxPClient.sendData( byte data[])</b>
+This method will try to send an array of bytes from the data buffer over the connection made by the RxP client and server.  If successful, it will return 0, otherwise it will return with an error code.
+
+<b>Byte[] RxPClient.getData(byte data[])</b>
+This method will request to receive data from the RxP server instance. If successful the data will be returned in a byte array.
+
+<b>void  RxPClient.close()</b>
+This method will send a close request to the RxP server instance and close itself.
+
+<b>RxPServer(String sourceIP, String destIP, short sourceDest, short destPort)</b>
+This constructor is call by a host to create a server RxP instance. The method tries to initializes and returns the RxPServer object.
+
+<b>RxPServer.startRxPServer()</b>
+This method is called by the RxP server instance to bind to sourcePort and wait to receive a connection.
+
+<b>int RxPServer.runServer( byte data[])</b>
+once a connection is established, this method is called to listed to requests from the RxP client instance.
+
+<b>int RxPServer.sendData(byte data[])</b>
+Upon a getData request from the RxP client instance, this method send the requested data to the client.
+
+<b>void  RxPServer.close()</b>
+This method will send a close request to the RxP client instance and close itself.
+
 </p>
 
 <p><b>Bugs and Limitations: </b>
