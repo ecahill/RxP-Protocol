@@ -1,6 +1,7 @@
 package com.cs3251;
 
 public class RxPPacket {
+	//Packet sent over RxP connection
 	private RxPPacketHeader packetHeader;
 	private byte[] data;
 	
