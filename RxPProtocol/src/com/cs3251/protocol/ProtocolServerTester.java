@@ -38,18 +38,22 @@ public class ProtocolServerTester {
 		RxPServer server = new RxPServer("localhost", ipAddress, serverPort, netEmuPort);
 		
 		server.startRxPServer();
-		//Scanner scan = new Scanner(System.in);
-		BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
+		InputStreamReader in = new InputStreamReader(System.in);
+		BufferedReader scan = new BufferedReader(in);
+		Scanner s = new Scanner(System.in);
 		boolean run = true;
-		boolean flag = false;
+		boolean flag = true;
 		String nextLine = "";
+		byte[] request = null;
 		while(run){
-			byte[] request = server.runServer();
+		//	request = null;
+		//	if (flag){
+				request = server.runServer();
+			//}
+			
 			if (request!= null){
-				flag = true;
-				System.out.println("<debug> Receiving request from client.");
+				//System.out.println("Receiving request from client.");
 				String val = new String(request);
-				System.out.println("<debug> The request was: "+val);
 				if (val.indexOf("GET*")!=-1){
 					String fRqst = val.substring(4);
 					fRqst = System.getProperty("user.dir")+"\\"+ fRqst;
@@ -68,13 +72,17 @@ public class ProtocolServerTester {
 				else if (val.indexOf("POST*")!=-1){
 					String fname = val.substring(5);
 					byte[] serverResponse = "!".getBytes();
-					if (server.sendData(serverResponse)>=0){
-						boolean wait = true;
+					System.out.println("Sending ready response.");
+					int response = server.sendData(serverResponse);
+					if (response>=0){
 						byte[] clientResponse = null;
+						System.out.println("Waiting for file.");
 						do{
 							clientResponse = server.runServer();
+						
 						}
 						while(clientResponse == null);
+						
 						if (clientResponse.length != 0){
 							System.out.println("Post was sucessful.");
 							FileOutputStream fos = new FileOutputStream(fname);
@@ -82,22 +90,26 @@ public class ProtocolServerTester {
 							fos.close();
 						}
 						else{
-						System.out.println("Post was unsucessful.");
+							System.out.println("Post was unsucessful.");
 						}
 					}
 					else{
 						System.out.println("Unable to send resposne.");
 					}
 				}
+
 				else{
 					System.out.println("Invalid Request.");
 					server.sendData(new byte[0]);
 				}
-				flag = false;
-			}
 			
-			if (scan.ready()){
+			}
+			else{
+				//System.out.println("is scanner ready?");
+			if (System.in.available()>0){
+				System.out.println("Waiting for input: ");
 				nextLine = scan.readLine();
+				//nextLine = s.nextLine();
 				if (nextLine.length()>=8){
 					String[] input = nextLine.split(" ");
 					if (input[0].equals("window")){
@@ -109,21 +121,19 @@ public class ProtocolServerTester {
 							System.out.println("Invalid window size.");
 						}
 					}
-					else{
-						System.out.println("Invalid command.");
-					}
-				}
-				if(nextLine.length()==9){
-					if (nextLine.equals("terminate")){
+					else if (input[0].equals("terminate")){
 						server.close();
 						run = false;
+					}
+					else{
+						System.out.println("Invalid command.");
 					}
 				}
 				else{
 					System.out.println("Invalid command.");
 				}
 			}
-		
+			}
 		}
 	}
 }

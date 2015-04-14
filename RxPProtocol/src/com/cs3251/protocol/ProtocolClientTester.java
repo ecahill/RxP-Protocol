@@ -57,13 +57,12 @@ public class ProtocolClientTester {
 			}		
 			else if (input.length==2){
 				if (input[0].equals("get")){
-					System.out.println("<debug> Reading GET input.");
 					String filename = input[1];
-					System.out.println("<debug> Looking for file: "+filename);
+					System.out.println("Looking for file: "+filename);
 					String request = "GET*"+filename;
 					byte[] ret = client.getData(request.getBytes());
 					if (ret.length!=0){
-						System.out.println("<debug> Writing file: "+filename);
+						System.out.println("Writing file: "+filename);
 						FileOutputStream fos = new FileOutputStream(filename);
 						fos.write(ret);
 						fos.close();
@@ -76,7 +75,9 @@ public class ProtocolClientTester {
 				else if(input[0].equals("post")){ // upload file to server
 					String filename = input[1];
 					byte[] rqst = client.getData(("POST*"+filename).getBytes());
-					if (rqst.toString().equals("!")){
+					String r = new String(rqst);
+					System.out.println("Sent post notice.");
+					if (r.equals("!")){
 						String fRqst = System.getProperty("user.dir")+"\\"+filename;
 						System.out.println("Searching for filepath: "+fRqst);
 						File f = new File(fRqst);
@@ -90,7 +91,8 @@ public class ProtocolClientTester {
 							client.sendData(new byte[0]);
 						}
 					}
-					else{					
+					else{		
+						System.out.println("Incorrect request received.");
 					}
 				}
 				else if(input[0].equals("window")){
@@ -100,6 +102,7 @@ public class ProtocolClientTester {
 				}
 				else{
 					System.out.println("Invalid input.");
+					
 				}
 			}
 		}
