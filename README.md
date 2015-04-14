@@ -19,14 +19,21 @@
 - The class represents a packet with a packet header and data
 <li>RxPPacketHeader.java</li>
 - This class contains all header information of each RxPPacket
-<li>  </li>
-<li>  </li>
+<li>ProtocolServerTester.java</li>
+- A runnable class that represents the server of the file transfer applicaiton
+<li>ProtocolClientTester.java</li>
+- A runnable class that represents the client of the file transfer application
+<li>FxA-server.jar</li>
+- A jar file that runs the server of the file transfer application
+<li>FxA-client.jar</li>
+- A jar file runs the client of the file transfer application
+<li>Sample.txt</li>
+- File of sample program output
 </ul>
 </p>
 
 <p><b>Compilation Instructions:</b>
-
-
+Open up a terminal and run the NetEmu. Open up another terminal and navigate to the location of FxA-server.jar. Open up another terminal and navigate to the location of FxA-client.jar. In the first terminal, type: "java -jar FxA-server.jar FxA-server <port number of application server> <IP Address> <port number of NetEmu>". In the second terminal, type: "java -jar FxA-client.jar FxA-client <port number of application client> <IP Address> <port number of NetEmu>". To connect the client to the server, type "connect" in the client's terminal. To get a file from the server, type: "get <filename>". To post a file to the server, type: "post <filename>". To disconnect the client from the server, type: "disconnect". 
 </p>
 
 <p><b>Updated Protocol: </b>
