@@ -36,7 +36,7 @@ public class RxPServer {
 		windowSize = 1;
 		packetFactory = new RxPServerPacketFactory();
 	}
-	
+	//initalizes the server and starts listening for a connection request
 	public int startRxPServer() throws IOException, ClassNotFoundException{
 		serverSocket = new DatagramSocket(sourcePort);
 		packetSent = packetFactory.createConnectionPacket(sourceIP, destIP, destPort, sourcePort);
@@ -51,7 +51,7 @@ public class RxPServer {
 		connectionState = packetSent.getPacketHeader().getConnectionCode();
 		return connectionState;
 	}	
-	
+	//once a connection has been made, this listens for data get/put requests
 	public byte[] runServer() throws ClassNotFoundException, IOException{
 		if(connectionState != 201) return null;
 		packetRecv = recvPacket(packetSent);
@@ -64,7 +64,7 @@ public class RxPServer {
 		
 		return null;
 	}
-	
+	//used to get the data from a client put request
 	private byte[] clientSendRequestHandler() throws IOException, ClassNotFoundException{
 		packetSent = packetFactory.createNextPacket(packetRecv, sourceIP, sourcePort);
 		sendPacket(packetSent);
@@ -81,7 +81,7 @@ public class RxPServer {
 		
 		return data;
 	}
-	
+	//used to send the data to a client from a get request
 	public int sendData(byte[] data) throws IOException, ClassNotFoundException{
 		if(connectionState != 201) return -1;
 
@@ -103,7 +103,7 @@ public class RxPServer {
 		}
 		return 0;
 	}
-	
+	//method used to make byte[] from packets to be sent over the connection
 	private void sendPacket(RxPPacket packetToSend) throws IOException{
 		byte[] bytesToSend = new byte[512];
 		byte[] packetHeader = packetToSend.getPacketHeader().headerToByte();
@@ -120,7 +120,7 @@ public class RxPServer {
 		sendPacket = new DatagramPacket(bytesToSend, bytesToSend.length, InetAddress.getByName(packetToSend.getPacketHeader().getDestIP()), packetToSend.getPacketHeader().getDestPort());
 		serverSocket.send(sendPacket);
 	}
-	
+	//used to turn byte[] into packets
 	private RxPPacket recvPacket(RxPPacket lastPacketSent) throws IOException, ClassNotFoundException{
 		byte[] recv = new byte[512];
 		RxPPacket newRecvdPacket;
