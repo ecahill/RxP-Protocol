@@ -37,7 +37,7 @@ Open up a terminal and run the NetEmu. Open up another terminal and navigate to 
 </p>
 
 <p><b>Updated Protocol: </b>
-
+ 
 </p>
 
 <p><b>Bugs and Limitations: </b>
