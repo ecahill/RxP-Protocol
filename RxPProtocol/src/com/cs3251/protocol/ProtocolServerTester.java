@@ -5,16 +5,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
-import java.util.Scanner;
 
 public class ProtocolServerTester {
 	private static short serverPort;
 	private static short netEmuPort;
 	private static String ipAddress;
 
+	
 	public static void main(String args[]) throws ClassNotFoundException, IOException{
 		
 		if (args.length!=4||!args[0].equals("FxA-server")){
@@ -40,19 +38,13 @@ public class ProtocolServerTester {
 		server.startRxPServer();
 		InputStreamReader in = new InputStreamReader(System.in);
 		BufferedReader scan = new BufferedReader(in);
-		Scanner s = new Scanner(System.in);
 		boolean run = true;
-		boolean flag = true;
 		String nextLine = "";
 		byte[] request = null;
 		while(run){
-		//	request = null;
-		//	if (flag){
-				request = server.runServer();
-			//}
-			
+			request = server.runServer();
 			if (request!= null){
-				//System.out.println("Receiving request from client.");
+				System.out.println("Receiving request from client.");
 				String val = new String(request);
 				if (val.indexOf("GET*")!=-1){
 					String fRqst = val.substring(4);
@@ -97,7 +89,6 @@ public class ProtocolServerTester {
 						System.out.println("Unable to send resposne.");
 					}
 				}
-
 				else{
 					System.out.println("Invalid Request.");
 					server.sendData(new byte[0]);
@@ -105,34 +96,32 @@ public class ProtocolServerTester {
 			
 			}
 			else{
-				//System.out.println("is scanner ready?");
-			if (System.in.available()>0){
-				System.out.println("Waiting for input: ");
-				nextLine = scan.readLine();
-				//nextLine = s.nextLine();
-				if (nextLine.length()>=8){
-					String[] input = nextLine.split(" ");
-					if (input[0].equals("window")){
-						try{
-							int size = Integer.parseInt(input[1]);
-							server.setWindow(size);
+				if (System.in.available()>0){
+					System.out.println("Waiting for input: ");
+					nextLine = scan.readLine();
+					if (nextLine.length()>=8){
+						String[] input = nextLine.split(" ");
+						if (input[0].equals("window")){
+							try{
+								int size = Integer.parseInt(input[1]);
+								server.setWindow(size);
+							}
+							catch(NumberFormatException ex){
+								System.out.println("Invalid window size.");
+							}
 						}
-						catch(NumberFormatException ex){
-							System.out.println("Invalid window size.");
+						else if (input[0].equals("terminate")){
+							server.close();
+							run = false;
 						}
-					}
-					else if (input[0].equals("terminate")){
-						server.close();
-						run = false;
+						else{
+							System.out.println("Invalid command.");
+						}
 					}
 					else{
 						System.out.println("Invalid command.");
 					}
 				}
-				else{
-					System.out.println("Invalid command.");
-				}
-			}
 			}
 		}
 	}

@@ -3,8 +3,6 @@ package com.cs3251.protocol;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.util.Scanner;
 
@@ -49,6 +47,7 @@ public class ProtocolClientTester {
 				}
 				else if (nextLine.equals("disconnect")){
 					client.close();
+					scan.close();
 					run = false;
 				}
 				else{
@@ -72,7 +71,7 @@ public class ProtocolClientTester {
 						System.out.println("Unsuccessful GET.");
 					}
 				}
-				else if(input[0].equals("post")){ // upload file to server
+				else if(input[0].equals("post")){
 					String filename = input[1];
 					byte[] rqst = client.getData(("POST*"+filename).getBytes());
 					String r = new String(rqst);
@@ -94,11 +93,6 @@ public class ProtocolClientTester {
 					else{		
 						System.out.println("Incorrect request received.");
 					}
-				}
-				else if(input[0].equals("window")){
-					// call client set window method
-					//int size = Integer.parseInt(input[1]);
-					//client.setWindow(size);
 				}
 				else{
 					System.out.println("Invalid input.");

@@ -41,15 +41,11 @@ public class RxPClient {
 		clientSocket = new DatagramSocket(sourcePort);
 		packetSent = packetFactory.createConnectionPacket(sourceIP, destIP, destPort, sourcePort);
 		sendPacket(packetSent);
-		System.out.println(packetSent.toString());
 		packetRecv = recvPacket(packetSent);
-		System.out.println(packetRecv.toString());
 		if(packetRecv.getPacketHeader().getAckNumber() != (packetSent.getPacketHeader().getSeqNumber() + 1)) return -1;
 		packetSent = packetFactory.createNextPacket(packetRecv);
 		sendPacket(packetSent);
-		System.out.println(packetSent.toString());
 		packetRecv = recvPacket(packetSent);
-		System.out.println(packetRecv.toString());
 		connectionState = packetRecv.getPacketHeader().getConnectionCode();
 		return connectionState;
 	}
@@ -110,7 +106,6 @@ public class RxPClient {
 		}
 		crc.update(Arrays.copyOfRange(bytesToSend, 4, packetHeader.length + packetToSend.getPacketHeader().getPacketSize() - 4));
 		int checksum = (int)crc.getValue();
-		System.out.println(checksum);
 		bytesToSend[0] = (byte) ((checksum >> 24) & 0xff);
 		bytesToSend[1] = (byte) ((checksum >> 16) & 0xff);
 		bytesToSend[2] = (byte) ((checksum >> 8) & 0xff);
@@ -126,15 +121,10 @@ public class RxPClient {
 		clientSocket.receive(recvPacket);
 		newRecvdPacket = new RxPPacket();
 		newRecvdPacket.setRxPPacketHeader(recv);
-		//add data here if any? or perhaps somewhere else?
 		if(newRecvdPacket.getPacketHeader().getDataSize() != 0 && newRecvdPacket.getPacketHeader().getPacketSize() != 0) {
 			newRecvdPacket.setData(Arrays.copyOfRange(recv, newRecvdPacket.getPacketHeader().getHeaderSize(), newRecvdPacket.getPacketHeader().getHeaderSize() + newRecvdPacket.getPacketHeader().getPacketSize()));
 		}
 		crc.update(Arrays.copyOfRange(recv, 4, newRecvdPacket.getPacketHeader().getHeaderSize() + newRecvdPacket.getPacketHeader().getPacketSize() - 4));
-		int checksum = (int)crc.getValue();
-		System.out.println(checksum);
-		if(checksum == newRecvdPacket.getPacketHeader().getChecksum())
-			System.out.println("match!");
 		return newRecvdPacket;
 	}
 	
