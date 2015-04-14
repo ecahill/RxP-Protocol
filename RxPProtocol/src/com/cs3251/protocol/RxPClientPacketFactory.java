@@ -38,7 +38,7 @@ public class RxPClientPacketFactory {
 		return null;
 	};
 	
-	public RxPPacket createNextPacket(RxPPacket packetRecvd) {
+	public RxPPacket createNextPacket(RxPPacket packetRecvd, String sourceIP, short sourcePort) {
 		packet = new RxPPacket();
 		packetHeader = new RxPPacketHeader();
 		switch(packetRecvd.getPacketHeader().getConnectionCode()){//201 == connected
@@ -46,10 +46,12 @@ public class RxPClientPacketFactory {
 				packetHeader.setDataSize(0);
 				packetHeader.setPacketSize(0);
 				packetHeader.setConnectionCode(200);
-				packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
-				packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
-				packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
-				packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				packetHeader.setSourceIP(sourceIP);
+				packetHeader.setSourcePort(sourcePort);
+				packetHeader.setDestIP(packetRecvd.getPacketHeader().getDestIP());
+				packetHeader.setDestPort(packetRecvd.getPacketHeader().getDestPort());
+				//packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				//packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
 				packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
 				packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
 				break;
@@ -57,10 +59,12 @@ public class RxPClientPacketFactory {
 				packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
 				packetHeader.setPacketSize(0);
 				packetHeader.setConnectionCode(502);
-				packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
-				packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
-				packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
-				packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				packetHeader.setSourceIP(sourceIP);
+				packetHeader.setSourcePort(sourcePort);
+				packetHeader.setDestIP(packetRecvd.getPacketHeader().getDestIP());
+				packetHeader.setDestPort(packetRecvd.getPacketHeader().getDestPort());
+				//packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				//packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
 				packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
 				packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
 				break;
@@ -69,10 +73,12 @@ public class RxPClientPacketFactory {
 				packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
 				packetHeader.setPacketSize(0);
 				packetHeader.setConnectionCode(505);
-				packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
-				packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
-				packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
-				packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				packetHeader.setSourceIP(sourceIP);
+				packetHeader.setSourcePort(sourcePort);
+				packetHeader.setDestIP(packetRecvd.getPacketHeader().getDestIP());
+				packetHeader.setDestPort(packetRecvd.getPacketHeader().getDestPort());
+				//packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				//packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
 				packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
 				packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
 				break;
@@ -81,10 +87,12 @@ public class RxPClientPacketFactory {
 				packetHeader.setDataSize(packetRecvd.getPacketHeader().getDataSize());
 				packetHeader.setPacketSize(0);
 				packetHeader.setConnectionCode(501);
-				packetHeader.setSourceIP(packetRecvd.getPacketHeader().getDestIP());
-				packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
-				packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
-				packetHeader.setSourcePort(packetRecvd.getPacketHeader().getDestPort());
+				packetHeader.setSourceIP(sourceIP);
+				packetHeader.setSourcePort(sourcePort);
+				packetHeader.setDestIP(packetRecvd.getPacketHeader().getDestIP());
+				packetHeader.setDestPort(packetRecvd.getPacketHeader().getDestPort());
+				//packetHeader.setDestIP(packetRecvd.getPacketHeader().getSourceIP());
+				//packetHeader.setDestPort(packetRecvd.getPacketHeader().getSourcePort());
 				packetHeader.setSeqNumber(Math.abs(rand.nextInt()));
 				packetHeader.setAckNumber(packetRecvd.getPacketHeader().getSeqNumber() + 1);
 				break;
