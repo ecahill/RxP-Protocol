@@ -41,5 +41,5 @@ Open up a terminal and run the NetEmu. Open up another terminal and navigate to 
 </p>
 
 <p><b>Bugs and Limitations: </b>
-
+During the development process, there were issues involving checksum that hindered the ability to check for packet validity. Without this in place we will be handling packets that could be corrupted and not know it.  An improvement on this would be to work out the kinks with tranfering the checksum into bytes we ran into.  Another Improvement we could make is adding the ability to have sliding window functionality.  This would enable higher throughput and less overhead!
 </p>
