@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class RxPPacketHeader {
+	//Header for the packet sent over the RxP connection.  This is used for turning headers into byte[] for easy sending
 	private int packetSize;//512 bytes
 	private int dataSize;
 	private int seqNumber;
@@ -123,7 +124,7 @@ public class RxPPacketHeader {
 	public int getHeaderSize(){
 		return (7*4) + sourceIP.length() + destIP.length() + 8;
 	}
-	
+	//breaks down the header into a byte[] to be sent
 	public byte[] headerToByte(){
 		byte[] bytePacket = new byte[36 + sourceIP.length() + destIP.length()];
 		System.arraycopy(ByteBuffer.allocate(4).putInt(checksum).array(), 0, bytePacket, 0, 4);
@@ -140,7 +141,7 @@ public class RxPPacketHeader {
 		System.arraycopy(destIP.getBytes(), 0, bytePacket, 36 + sourceIP.length(), destIP.length());
 		return bytePacket;
 	}
-	
+	//builds the header from a byte array to better understand the packet recieved.
 	public void byteToHeader(byte[] packet){
 		checksum = (packet[0]<<24)&0xff000000|(packet[1]<<16)&0x00ff0000|(packet[2]<< 8)&0x0000ff00|(packet[3]<< 0)&0x000000ff;
 		packetSize = (packet[4]<<24)&0xff000000|(packet[5]<<16)&0x00ff0000|(packet[6]<< 8)&0x0000ff00|(packet[7]<< 0)&0x000000ff;
