@@ -35,7 +35,7 @@ public class RxPClient {
 		windowSize = 1;
 		packetFactory = new RxPClientPacketFactory();
 	}
-	
+	//Method used for trying to make a connection to a RxPServer
 	public int connect() throws IOException, ClassNotFoundException{
 		if(connectionState != 0) return -1;
 		clientSocket = new DatagramSocket(sourcePort);
@@ -49,7 +49,7 @@ public class RxPClient {
 		connectionState = packetRecv.getPacketHeader().getConnectionCode();
 		return connectionState;
 	}
-	
+	//used to send data over the connection
 	public int sendData(byte[] data) throws IOException, ClassNotFoundException{
 		if(connectionState != 201) return -1;
 
@@ -71,7 +71,7 @@ public class RxPClient {
 		}
 		return 0;
 	}
-	
+	//used to request data from the server
 	public byte[] getData(byte[] data) throws ClassNotFoundException, IOException{
 		sendData(data);
 		packetRecv = recvPacket(packetSent);
@@ -79,7 +79,7 @@ public class RxPClient {
 		return serverSendRequestHandler();
 		
 	}
-	
+	//handler for sending data to the server
 	private byte[] serverSendRequestHandler() throws IOException, ClassNotFoundException{
 		packetSent = packetFactory.createNextPacket(packetRecv, sourceIP, sourcePort);
 		sendPacket(packetSent);
@@ -96,7 +96,7 @@ public class RxPClient {
 		
 		return data;
 	}
-	
+	//method for turning a packet into a byte[]
 	private void sendPacket(RxPPacket packetToSend) throws IOException{
 		byte[] bytesToSend = new byte[512];
 		byte[] packetHeader = packetToSend.getPacketHeader().headerToByte();
@@ -113,7 +113,7 @@ public class RxPClient {
 		sendPacket = new DatagramPacket(bytesToSend, bytesToSend.length, InetAddress.getByName(packetToSend.getPacketHeader().getDestIP()), packetToSend.getPacketHeader().getDestPort());
 		clientSocket.send(sendPacket);
 	}
-	
+	//method used for turning the incomming data into packets
 	private RxPPacket recvPacket(RxPPacket lastPacketSent) throws IOException, ClassNotFoundException{
 		byte[] recv = new byte[512];
 		RxPPacket newRecvdPacket;
@@ -127,7 +127,7 @@ public class RxPClient {
 		crc.update(Arrays.copyOfRange(recv, 4, newRecvdPacket.getPacketHeader().getHeaderSize() + newRecvdPacket.getPacketHeader().getPacketSize() - 4));
 		return newRecvdPacket;
 	}
-	
+	//to terminate the connection
 	public void close() {
 		if(!clientSocket.isClosed()){
 			clientSocket.close();
